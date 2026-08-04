@@ -46,7 +46,7 @@ Edit `script-opts/hold-to-speedup.conf` in your config folder:
 | Option | Default | Meaning |
 |---|---|---|
 | `speed` | `2.0` | Playback speed while held |
-| `hold_threshold` | `0.15` | Seconds before a press counts as a hold rather than a tap |
+| `hold_threshold` | `0.2` | Seconds before a press counts as a hold rather than a tap |
 | `enable_mouse` | `yes` | Also speed up while the left mouse button is held |
 | `replay_on_end` | `yes` | Tapping Space on the final frame restarts the file |
 | `keep_open` | `yes` | Force `keep-open=yes` so a finished file stays on its last frame |
@@ -57,7 +57,7 @@ Edit `script-opts/hold-to-speedup.conf` in your config folder:
 ## Changes from upstream
 
 - **Replay on tap at end.** Tapping Space while parked on the final frame seeks to 0:00 and resumes, instead of un-pausing in place and appearing to do nothing. Detected via `eof-reached` with a duration/position fallback, both gated on being paused so a normal pause near the end is unaffected.
-- **Configurable via `script-opts`.** Speed and hold threshold were hardcoded; they and everything else now come from a conf file. The hold threshold also drops from upstream's 0.5s to 0.15s, which feels far more responsive — raise it back toward 0.25s if a deliberate tap ever registers as a hold.
+- **Configurable via `script-opts`.** Speed and hold threshold were hardcoded; they and everything else now come from a conf file. The hold threshold also drops from upstream's 0.5s to 0.2s, which feels far more responsive while still sitting clear of a deliberate tap (roughly 0.1s).
 - **Separate state per binding.** Upstream shared one `timer` and one `is_speeding` flag between the keyboard and mouse handlers, so releasing one cancelled the other's hold. Each binding now has its own.
 - **Plain OSD messages.** Replaced the `set_osd_ass` overlay (which had to be cleared by hand with an empty `osd_message`) with ordinary `mp.osd_message` calls.
 - **`install-mpvnet.ps1`** for mpv.net, since its config folder is not the one upstream's README points at.
