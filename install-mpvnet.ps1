@@ -76,10 +76,16 @@ $luaTarget  = Join-Path $scriptsDir    "hold-to-speedup.lua"
 $confTarget = Join-Path $scriptOptsDir "hold-to-speedup.conf"
 
 if ($Source -eq "github") {
+    # raw.githubusercontent sits behind a CDN with a few minutes of TTL, so a
+    # plain fetch right after a push still serves the old file. A unique query
+    # string gives the edge a cache key it has never seen.
+    $bust = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+    $noCache = @{ "Cache-Control" = "no-cache"; "Pragma" = "no-cache" }
+
     Write-Host "Downloading hold-to-speedup.lua from GitHub..."
-    Invoke-WebRequest -Uri "$RawBase/hold-to-speedup.lua" -OutFile $luaTarget -UseBasicParsing
+    Invoke-WebRequest -Uri "$RawBase/hold-to-speedup.lua?_=$bust" -OutFile $luaTarget -Headers $noCache -UseBasicParsing
     if (-not (Test-Path $confTarget)) {
-        Invoke-WebRequest -Uri "$RawBase/script-opts/hold-to-speedup.conf" -OutFile $confTarget -UseBasicParsing
+        Invoke-WebRequest -Uri "$RawBase/script-opts/hold-to-speedup.conf?_=$bust" -OutFile $confTarget -Headers $noCache -UseBasicParsing
     }
 } else {
     $here = Split-Path -Parent $MyInvocation.MyCommand.Path
