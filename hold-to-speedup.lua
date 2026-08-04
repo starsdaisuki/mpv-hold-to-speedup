@@ -13,7 +13,7 @@ local options = require "mp.options"
 
 local o = {
     speed          = 2.0,   -- playback speed while held
-    hold_threshold = 0.5,   -- seconds before a press counts as a hold
+    hold_threshold = 0.15,  -- seconds before a press counts as a hold
     enable_mouse   = true,  -- also speed up while the left mouse button is held
     replay_on_end  = true,  -- tapping on the final frame restarts the file
     keep_open      = true,  -- force keep-open so there is a frame left to tap on
